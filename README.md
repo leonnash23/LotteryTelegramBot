@@ -12,3 +12,6 @@ Features for today:
   * Joining to room
   * Exiting from room
   * Closing room
+## How to run
+1) Open application.properties and set DB credentials and bot token
+2) Call `gradle bootRun`
