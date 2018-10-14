@@ -19,7 +19,7 @@ import java.util.Map;
 public class MainHandlerConfig {
 
     @Autowired
-    private final StartMessageHandler startMessageHandler;
+    private StartMessageHandler startMessageHandler;
     @Autowired
     private BalanceMessageHandler balanceMessageHandler;
     @Autowired
@@ -28,11 +28,6 @@ public class MainHandlerConfig {
     private AbstractMessageHandler roomsMessageHandler;
     @Autowired
     private UserRoomsMessageHandler userRoomsMessageHandler;
-
-    @Autowired
-    public MainHandlerConfig(StartMessageHandler startMessageHandler) {
-        this.startMessageHandler = startMessageHandler;
-    }
 
 
     @Bean

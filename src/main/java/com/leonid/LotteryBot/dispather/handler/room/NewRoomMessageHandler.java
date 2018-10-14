@@ -23,6 +23,6 @@ public class NewRoomMessageHandler extends AbstractMessageHandler {
     public SendMessage handle(Message message) {
         User user = getUserFromMessage(message);
         userSessionManager.addUserWaitForRoomBet(user);
-        return messageService.createAskForBetMessage(user);
+        return messageService.createTextMessage(user, "Какова ставка комнаты?");
     }
 }

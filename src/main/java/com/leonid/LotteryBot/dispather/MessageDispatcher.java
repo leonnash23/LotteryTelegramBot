@@ -36,8 +36,8 @@ public class MessageDispatcher {
             if (messageHandler != null) {
                 userSessionManager.resetUserState(getUser(message));
                 return messageHandler.handle(message);
-            } else if (trimMessage.startsWith("/exit") ||
-                    trimMessage.startsWith("/join")) {
+            } else if (trimMessage.startsWith("/exit")
+                    || trimMessage.startsWith("/join")) {
                 return roomManagementHandler.handle(message);
             } else {
                 return sessionMessageHandler.handle(message);

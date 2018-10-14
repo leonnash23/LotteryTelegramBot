@@ -21,17 +21,9 @@ public class MessageService {
     }
 
 
-    public SendMessage createAskForBetMessage(User user) {
-        return createTextMessage(user, "Какова ставка комнаты?");
-    }
-
     public SendMessage createTextMessage(User user, String message) {
         return new SendMessage()
                 .setChatId(user.getUid())
                 .setText(message);
-    }
-
-    public SendMessage createRoomCreatedMessage(User user) {
-        return createTextMessage(user, "Комната создана");
     }
 }

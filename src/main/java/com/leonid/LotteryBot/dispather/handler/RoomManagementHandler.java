@@ -28,12 +28,16 @@ public class RoomManagementHandler extends AbstractMessageHandler {
     public SendMessage handle(Message message) {
         String cleanText = getLowerAndTrimText(message);
         User user = getUserFromMessage(message);
-        if (cleanText.startsWith("/join")) {
-            return tryToJoinRoom(cleanText, user);
-        } else if (cleanText.startsWith("/exit")) {
-            return tryToExitFromRoom(cleanText, user);
-        } else {
-            return messageService.createTextMessage(user, "Неизвестная команда");
+        try {
+            if (cleanText.startsWith("/join")) {
+                return tryToJoinRoom(cleanText, user);
+            } else if (cleanText.startsWith("/exit")) {
+                return tryToExitFromRoom(cleanText, user);
+            } else {
+                return messageService.createTextMessage(user, "Неизвестная команда");
+            }
+        } catch (NumberFormatException e) {
+            return messageService.createTextMessage(user, "Некорректный номер комнаты");
         }
     }
 
