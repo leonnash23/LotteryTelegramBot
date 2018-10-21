@@ -6,6 +6,7 @@ import com.leonid.LotteryBot.domain.User;
 import com.leonid.LotteryBot.service.MessageService;
 import com.leonid.LotteryBot.service.RoomService;
 import com.leonid.LotteryBot.service.UserSessionManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -14,6 +15,9 @@ import java.util.List;
 
 @Component
 public class AbstractMessageHandler extends AbstractRoomMessageHandler {
+
+    @Value("${roomCapacity}")
+    private int roomCapacity;
 
 
     protected AbstractMessageHandler(MessageService messageService, UserRepository userRepository, RoomService roomService, UserSessionManager userSessionManager) {
@@ -44,7 +48,7 @@ public class AbstractMessageHandler extends AbstractRoomMessageHandler {
                     .append(room.getBet())
                     .append(", Пользователей: ")
                     .append(room.getUsers().size())
-                    .append("/6")
+                    .append("/").append(roomCapacity)
                     .append("\n");
         }
         return stringBuilder.toString();

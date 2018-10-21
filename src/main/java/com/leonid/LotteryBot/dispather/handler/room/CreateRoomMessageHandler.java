@@ -7,6 +7,7 @@ import com.leonid.LotteryBot.exception.NegativeBetException;
 import com.leonid.LotteryBot.exception.NotEnoughMoneyException;
 import com.leonid.LotteryBot.service.MessageService;
 import com.leonid.LotteryBot.service.RoomService;
+import com.leonid.LotteryBot.service.UserService;
 import com.leonid.LotteryBot.service.UserSessionManager;
 import com.leonid.LotteryBot.validation.BetUserValidator;
 import com.leonid.LotteryBot.validation.BetValidator;
@@ -19,11 +20,13 @@ public class CreateRoomMessageHandler extends AbstractMessageHandler {
 
     private final RoomService roomService;
     private final UserSessionManager userSessionManager;
+    private final UserService userService;
 
-    protected CreateRoomMessageHandler(MessageService messageService, UserRepository userRepository, RoomService roomService, UserSessionManager userSessionManager, RoomService roomService1, UserSessionManager userSessionManager1) {
+    protected CreateRoomMessageHandler(MessageService messageService, UserRepository userRepository, RoomService roomService, UserSessionManager userSessionManager, RoomService roomService1, UserSessionManager userSessionManager1, UserService userService) {
         super(messageService, userRepository);
         this.roomService = roomService1;
         this.userSessionManager = userSessionManager1;
+        this.userService = userService;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class CreateRoomMessageHandler extends AbstractMessageHandler {
         try {
             new BetValidator().validate(lowerAndTrimText);
             double bet = Double.parseDouble(lowerAndTrimText);
-            new BetUserValidator().validate(user, bet);
+            new BetUserValidator().validate(userService.getUserBalance(user), bet);
             roomService.createAndSave(user, bet);
             userSessionManager.resetUserState(user);
             answer = "Комната создана";

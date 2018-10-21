@@ -22,7 +22,7 @@ public class User extends AbstractEntity {
     @Column
     private String username;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "userBalance_id")
     private UserBalance userBalance;
 

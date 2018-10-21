@@ -8,20 +8,24 @@ import com.leonid.LotteryBot.exception.FullRoomException;
 import com.leonid.LotteryBot.exception.NotOpenRoomException;
 import com.leonid.LotteryBot.exception.RoomNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @Component
-public class RoomService {
+public class RoomService extends AbstractService {
 
+    @Value("${roomCapacity}")
+    private int roomCapacity;
     private final RoomRepository roomRepository;
 
     @Autowired
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, EntityManagerFactory factory) {
+        super(factory);
         this.roomRepository = roomRepository;
     }
 
@@ -30,32 +34,18 @@ public class RoomService {
     }
 
     public List<Room> getOpenRoom() {
-        Iterable<Room> rooms = roomRepository.findAll();
-        List<Room> openRooms = new ArrayList<>();
-        for (Room room : rooms) {
-            if (room.getState().equals(Room.OPEN)) {
-                openRooms.add(room);
-            }
-        }
-        return openRooms;
+        return roomRepository.findOpenRoomEager(Room.OPEN);
     }
 
     public List<Room> getUserRooms(User user) {
-        Iterable<Room> rooms = roomRepository.findAll();
-        List<Room> userRooms = new ArrayList<>();
-        for (Room room : rooms) {
-            if (room.getUsers().contains(user)) {
-                userRooms.add(room);
-            }
-        }
-        return userRooms;
+        return roomRepository.findAllForUser(user.getId());
     }
 
     public void addUserToRoomById(User user, Long roomId) throws FullRoomException,
             RoomNotFoundException,
             NotOpenRoomException,
             AlreadyOnRoomException {
-        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Optional<Room> roomOptional = roomRepository.findByIdEager(roomId);
         if (!roomOptional.isPresent()) {
             throw new RoomNotFoundException();
         }
@@ -69,9 +59,8 @@ public class RoomService {
         }
         checkRoomFull(users);
         users.add(user);
-        if (users.size() == 6) {
+        if (users.size() == roomCapacity) {
             room.setState(Room.CLOSED);
-            //todo make lottery
         }
         roomRepository.save(room);
     }
@@ -88,7 +77,7 @@ public class RoomService {
 
     public void removeUserFromRoomByIf(User user, Long roomId) throws RoomNotFoundException {
         List<Room> userRooms = getUserRooms(user);
-        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Optional<Room> roomOptional = roomRepository.findByIdEager(roomId);
         if (!roomOptional.isPresent()) {
             throw new RoomNotFoundException();
         }

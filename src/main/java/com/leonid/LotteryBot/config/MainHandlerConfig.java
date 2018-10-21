@@ -28,6 +28,8 @@ public class MainHandlerConfig {
     private AbstractMessageHandler roomsMessageHandler;
     @Autowired
     private UserRoomsMessageHandler userRoomsMessageHandler;
+    @Autowired
+    private CancelMessageHandler cancelMessageHandler;
 
 
     @Bean
@@ -51,6 +53,7 @@ public class MainHandlerConfig {
         handlerMap.put("/newroom", newRoomMessageHandler);
         handlerMap.put("/rooms", roomsMessageHandler);
         handlerMap.put("/myrooms", userRoomsMessageHandler);
+        handlerMap.put("/cancel", cancelMessageHandler);
         return handlerMap;
     }
 

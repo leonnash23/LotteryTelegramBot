@@ -1,15 +1,13 @@
 package com.leonid.LotteryBot.validation;
 
-import com.leonid.LotteryBot.domain.User;
+import com.leonid.LotteryBot.domain.UserBalance;
 import com.leonid.LotteryBot.exception.NotEnoughMoneyException;
 
-public class BetUserValidator implements UserValidator<Double> {
+public class BetUserValidator {
 
+    public void validate(UserBalance userBalance, Double bet) throws NotEnoughMoneyException {
 
-    @Override
-    public void validate(User user, Double bet) throws NotEnoughMoneyException {
-
-        if (user.getUserBalance().getMoney() < bet) {
+        if (userBalance.getMoney() < bet) {
             throw new NotEnoughMoneyException();
         }
     }

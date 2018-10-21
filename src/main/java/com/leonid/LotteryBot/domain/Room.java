@@ -23,7 +23,7 @@ public class Room extends AbstractEntity {
     private Room() {
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "users_in_room",
             inverseForeignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
